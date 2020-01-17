@@ -1,19 +1,16 @@
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="db.DBConn"%>
-<%@page import = "java.sql.*" %>
+<%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	request.setCharacterEncoding("UTF-8");
-	//2단계
 	Connection conn = new DBConn().getConnection();
-			
-	//3:sql구문
-	String sql = "insert into STUDENT_TBL_01 (STUDENT_NAME,STUDENT_ADDR,STUDENT_PHONE,STUDENT_BIRTH,STUDENT_EMAIL,STUDENT_ID,STUDENT_PW)"
-	+ "values(?, ?, ?, ?, ?, ?, ?)";
 	
-	//4: statement 실행
-	String email = request.getParameter("student_email") + "@" +
-request.getParameter("student_email2");
+	String sql = "update STUDENT_TBL_01 set STUDENT_NAME=?,STUDENT_ADDR=?.STUDENT_PHONE=?,STUDENT_BIRTH=?,STUDENT_EMAIL=?,STUDENT_ID=?,STUDENT_PW=?"
+					+ "where STUDENT_NO=?";
+	
+	String email = request.getParameter("student_email") +
+	 				"@" + request.getParameter("student_email2");
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, request.getParameter("student_name"));
 	pstmt.setString(2, request.getParameter("student_addr"));
@@ -22,18 +19,11 @@ request.getParameter("student_email2");
 	pstmt.setString(5, email);
 	pstmt.setString(6, request.getParameter("student_id"));
 	pstmt.setString(7, request.getParameter("student_pw"));
+	pstmt.setString(8, request.getParameter("student_no"));
 	int r = pstmt.executeUpdate();
-	//5:결과 처리
-	System.out.print(r+"건이 등록됨");
-	//6:연결 해제
+	
+	System.out.print(r + "건이 수정됨");
+	
 	conn.close();
-	response.sendRedirect("getStudent.jsp");
-%>
-<script>
-	// alert("처리완료");
-	// location.href = "getStccks.jsp"
-</script>
-	
-	
-	
+	response.sendRedirect("getStudents.jsp");
 	
